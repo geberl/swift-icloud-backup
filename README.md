@@ -10,14 +10,17 @@
 ## Usage
 
 ```shell
-# Backup and show summary
-./icloud-backup --dst "/Volumes/T7 Black/cloud-backups/iCloud_Drive"
+# Analyze source and destination and print what would happen
+./icloud-backup --dry-run --dst "/Volumes/T7 Black/cloud-backups/iCloud_Drive/"
 
 # Show auto-detected documents directory
 ./icloud-backup --show-src
 
-# Backup another directory and show summary
-./icloud-backup --src "/Users/guenther/Downloads/" --dst "/Volumes/T7 Black/cloud-backups/Downloads"
+# Perform backup
+./icloud-backup --dst "/Volumes/T7 Black/cloud-backups/iCloud_Drive/"
+
+# Backup another directory
+./icloud-backup --src "/Users/guenther/Downloads/" --dst "/Volumes/T7 Black/cloud-backups/Downloads/"
 
 # Show help
 ./icloud-backup --help

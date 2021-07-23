@@ -8,14 +8,16 @@
 import Foundation
 import ArgumentParser
 
-struct CloudStatsOptions: ParsableArguments {
+struct CloudBackupOptions: ParsableArguments {
     @Flag(name: .long, help: "Print version and exit.") var version = false
     @Flag(name: .long, help: "Show auto-detected source path and exit.") var showSrc = false
+    @Flag(name: .long, help: "Analyze source and destination and print what would happen.") var dryRun = false
     @Option(help: ArgumentHelp("Override the source path.", valueName: "path")) var src = ""
+    @Option(help: ArgumentHelp("Set the destination path.", valueName: "path")) var dst = ""
     // --help is automatically included
 }
 
-let options = CloudStatsOptions.parseOrExit()
+let options = CloudBackupOptions.parseOrExit()
 
 if options.version == true {
     print("Version 1.0.0")
@@ -26,88 +28,87 @@ if options.version == true {
                                                    create: false)
     print(documentsUrl.path.deletingPrefix("file://"))
 } else {
-    var scanUrl: URL?
+    var srcUrl: URL?
+    var dstUrl: URL?
     let fileManager = FileManager.default
+    var isDir : ObjCBool = true
     
-    if options.src != "" {
-        var isDir : ObjCBool = true
-        if fileManager.fileExists(atPath: options.src, isDirectory:&isDir) {
-            scanUrl = URL(string: options.src)
-        } else {
-            print("Source path does not exist")
-            exit(1)
-        }
+    if options.dst == "" {
+        print("Destination path must be set.")
+        exit(1)
     } else {
-        do {
-            scanUrl = try FileManager.default.url(for: .documentDirectory,
-                                                  in: .userDomainMask,
-                                                  appropriateFor: nil,
-                                                  create: false)
-        } catch {
-            print(error.localizedDescription)
+        if fileManager.fileExists(atPath: options.dst, isDirectory:&isDir) {
+            dstUrl = URL(fileURLWithPath: options.dst)
+        } else {
+            print("Destination path does not exist")
             exit(1)
         }
     }
     
-    if let safeScanUrl = scanUrl {
-        let childDirs = getChildDirs(url: safeScanUrl)
-        var overall = dirOverall(maxLengthPath: "PATH".count,
-                                 maxLengthDirs: "DIRS".count,
-                                 maxLengthFiles: "FILES".count,
-                                 maxLengthPlaceholders: "PLACEHOLDERS".count,
-                                 maxLengthHidden: "HIDDEN".count,
-                                 maxLengthSizeFiles: "SIZE".count,
-                                 maxLengthSizeOffloaded: "OFFLOADED".count,
-                                 maxLengthTotal: "TOTAL".count,
-                                 totalDirs: 0,
-                                 totalFiles: 0,
-                                 totalPlaceholders: 0,
-                                 totalHidden: 0,
-                                 totalSizeFiles: 0,
-                                 totalSizeOffloaded: 0,
-                                 stats: [])
-        
-        for childDir in childDirs {
-            let childStats = walkDir(baseURL: childDir)
-            
-            if childStats.path.count > overall.maxLengthPath {
-                overall.maxLengthPath = childStats.path.count
-            }
-            
-            if String(childStats.numberOfDirs).count > overall.maxLengthDirs {
-                overall.maxLengthDirs = String(childStats.numberOfDirs).count
-            }
-            
-            if String(childStats.numberOfFiles).count > overall.maxLengthFiles {
-                overall.maxLengthFiles = String(childStats.numberOfFiles).count
-            }
-            
-            if String(childStats.numberOfPlaceholders).count > overall.maxLengthPlaceholders {
-                overall.maxLengthPlaceholders = String(childStats.numberOfPlaceholders).count
-            }
-            
-            if String(childStats.numberOfHidden).count > overall.maxLengthHidden {
-                overall.maxLengthHidden = String(childStats.numberOfHidden).count
-            }
-            
-            if getSizeString(byteCount: childStats.sizeFiles).count > overall.maxLengthSizeFiles {
-                overall.maxLengthSizeFiles = getSizeString(byteCount: childStats.sizeFiles).count
-            }
-            
-            if getSizeString(byteCount: childStats.sizeOffloaded).count > overall.maxLengthSizeOffloaded {
-                overall.maxLengthSizeOffloaded = getSizeString(byteCount: childStats.sizeOffloaded).count
-            }
-            
-            overall.totalDirs += childStats.numberOfDirs
-            overall.totalFiles += childStats.numberOfFiles
-            overall.totalPlaceholders += childStats.numberOfPlaceholders
-            overall.totalHidden += childStats.numberOfHidden
-            overall.totalSizeFiles += childStats.sizeFiles
-            overall.totalSizeOffloaded += childStats.sizeOffloaded
-            
-            overall.stats.append(childStats)
+    if options.src == "" {
+        do {
+            srcUrl = try FileManager.default.url(for: .documentDirectory,
+                                                 in: .userDomainMask,
+                                                 appropriateFor: nil,
+                                                 create: false)
+        } catch {
+            print(error.localizedDescription)
+            exit(1)
         }
+    } else {
+        if fileManager.fileExists(atPath: options.src, isDirectory:&isDir) {
+            srcUrl = URL(fileURLWithPath: options.src)
+        } else {
+            print("Source path does not exist")
+            exit(1)
+        }
+    }
+    
+    if let safeDstUrl = dstUrl {
+        if let safeSrcUrl = srcUrl {
+            let dstStats = analyzeDstDir(dstURL: safeDstUrl, srcURL: safeSrcUrl)
+            
+            print("Results destination dir -----------------------------")
+            print(" start                     ", dstStats.start)
+            print(" end                       ", dstStats.end ?? "n/a")
+            print(" directories               ", dstStats.dirCount)
+            print(" files                     ", dstStats.fileCount)
+            print(" size                      ", getSizeString(byteCount: dstStats.fileSize))
+            print(" directories to delete     ", dstStats.dirsToDelete.count)
+            print(" files to delete           ", dstStats.filesToDelete.count)
+            print(" size (delete)             ", getSizeString(byteCount: dstStats.filesToDeleteSize))
+            print(" files to delete (banlist) ", dstStats.filesToDeleteBanlist.count)
+            print(" size (banlist)            ", getSizeString(byteCount: dstStats.filesToDeleteBanlistSize))
+            print("")
+            
+            let srcStats = analyzeSrcDir(srcURL: safeSrcUrl, dstURL: safeDstUrl)
+
+            print("Results source dir ----------------------------------")
+            print(" start                     ", srcStats.start)
+            print(" end                       ", srcStats.end ?? "n/a")
+            print(" directories               ", srcStats.dirCount)
+            print(" files                     ", srcStats.fileCount)
+            print(" size                      ", getSizeString(byteCount: srcStats.fileSize))
+            print(" directories to create     ", srcStats.dirsToCreate.count)
+            print(" files to copy             ", srcStats.filesToCopy.count)
+            print(" size (copy)               ", getSizeString(byteCount: srcStats.filesToCopySize))
+            print(" files to download & copy  ", srcStats.filesToDownloadAndCopy.count)
+            print(" size (download & copy)    ", getSizeString(byteCount: srcStats.filesToDownloadAndCopySize))
+            print("")
+        }
+    }
+    
+    if options.dryRun == true {
+        exit(0)
+    } else {
+        // TODO, in this order:
         
-        printStats(overall: overall)
+        // dstDeleteFilesBanlist()
+        // dstDeleteFiles()
+        // dstDeleteDirs()
+        
+        // srcCreateDirs()
+        // srcCopyFiles()
+        // srcDownloadAndCopyFiles()
     }
 }

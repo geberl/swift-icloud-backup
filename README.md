@@ -2,33 +2,40 @@
 
 *A macOS terminal app that copies your iCloud Documents onto a connected storage device*
 
-![Swift](https://img.shields.io/badge/swift-5.3-brightgreen.svg)
-![Xcode](https://img.shields.io/badge/xcode-12.5-brightgreen.svg)
+![Swift](https://img.shields.io/badge/swift-5.4-orange.svg)
+![Xcode](https://img.shields.io/badge/xcode-12.5.1-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
 
 ## Usage
 
 ```shell
-# Analyze source and destination and print what would happen
-./icloud-backup --dry-run --dst "/Volumes/T7 Black/cloud-backups/iCloud_Drive/"
+# Show help
+./icloudbackup --help
 
 # Show auto-detected documents directory
-./icloud-backup --show-src
+./icloudbackup --show-src
+
+# Analyze source and destination trees and print what would happen
+./icloudbackup --dry-run --dst "/Volumes/Black/icloud-documents-backup/"
+
+# Analyze source and destination trees and print what would happen with all individual files
+./icloudbackup --dry-run --dst "/Volumes/Black/icloud-documents-backup/" --verbose
 
 # Perform backup
-./icloud-backup --dst "/Volumes/T7 Black/cloud-backups/iCloud_Drive/"
+./icloudbackup --dst "/Volumes/Black/icloud-documents-backup/"
 
 # Backup another directory
-./icloud-backup --src "/Users/guenther/Downloads/" --dst "/Volumes/T7 Black/cloud-backups/Downloads/"
-
-# Show help
-./icloud-backup --help
+./icloudbackup --src "/Users/guenther/Downloads/" --dst "/Volumes/Black/icloud-documents-backup/"
 ```
 
 ## Screenshots
 
-TODO
+![screenshot1](/screenshots/1.png?raw=true "Screenshot 1")
+
+![screenshot2](/screenshots/2.png?raw=true "Screenshot 2")
+
+![screenshot3](/screenshots/3.png?raw=true "Screenshot 3")
 
 ## Dependencies
 
@@ -38,4 +45,14 @@ TODO
 
 - Offloaded files only exist as a placeholder `*.plist` files on your drive
 - These files only have a few bytes
-- Because of this common backup tools like `rsync` are of no use to download and backup the real file, not just the placeholder
+- Because of this common backup tools like `rsync` are of no use, would just copy the placeholder
+- You need to download, backup and offload the real file
+- This tool does exactly that
+
+## Know Issues
+
+- Using a non-APFS formatted drive as destination is not supported
+    - Copying works fine, but afterwards the file attributes can't be set correctly for e.g. exFAT (probably because those attributes don't exist there?)
+    - HFS+ might work, untested
+- Progress indication is not yet shown during long running operations
+    - Maybe use [https://github.com/jkandzi/Progress.swift](https://github.com/jkandzi/Progress.swift)

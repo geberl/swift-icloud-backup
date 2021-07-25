@@ -24,3 +24,15 @@ func getSizeOfOffloadedContent(url: URL) -> Int64 {
     }
     return 0
 }
+
+func getNameOfOffloadedContent(url: URL) -> String {
+    guard let xml = FileManager.default.contents(atPath: url.path) else {
+        print(url)
+        return ""
+    }
+  
+    if let plist = try? PropertyListDecoder().decode(iCloudPlist.self, from: xml) {
+        return plist.NSURLNameKey
+    }
+    return ""
+}

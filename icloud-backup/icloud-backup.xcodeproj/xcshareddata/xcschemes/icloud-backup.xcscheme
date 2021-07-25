@@ -56,6 +56,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--verbose"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--dry-run"
             isEnabled = "YES">
          </CommandLineArgument>
@@ -64,7 +68,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--dst &quot;/Volumes/T7 Black/cloud-backups/iCloud_Drive/&quot;"
+            argument = "--dst &quot;/Volumes/Black/icloud-documents-backup/&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

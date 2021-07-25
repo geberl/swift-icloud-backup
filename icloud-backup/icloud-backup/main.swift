@@ -8,90 +8,30 @@
 import Foundation
 import ArgumentParser
 
-struct CloudBackupOptions: ParsableArguments {
+struct IcloudbackupOptions: ParsableArguments {
     @Flag(name: .long, help: "Print version and exit.") var version = false
     @Flag(name: .long, help: "Show auto-detected source path and exit.") var showSrc = false
-    @Flag(name: .long, help: "Analyze source and destination and print what would happen.") var dryRun = false
-    @Flag(name: .long, help: "Show the paths of individual items after analyzing source and destination.") var verbose = false
+    @Flag(name: .long, help: "Analyze source and destination trees and print what would happen.") var dryRun = false
+    @Flag(name: .long, help: "Show the paths of all individual items after analyzing source and destination.") var verbose = false
     @Option(help: ArgumentHelp("Override the source path.", valueName: "path")) var src = ""
     @Option(help: ArgumentHelp("Set the destination path.", valueName: "path")) var dst = ""
     // --help is automatically included
 }
 
-let options = CloudBackupOptions.parseOrExit()
+let cli = CLI(options: IcloudbackupOptions.parseOrExit(), version: "0.1.0")
 
-if options.version == true {
-    print("Version 1.0.0")
-} else if options.showSrc == true {
-    let documentsUrl = try FileManager.default.url(for: .documentDirectory,
-                                                   in: .userDomainMask,
-                                                   appropriateFor: nil,
-                                                   create: false)
-    print(documentsUrl.path.deletingPrefix("file://"))
-} else {
-    var srcUrl: URL?
-    var dstUrl: URL?
-    let fileManager = FileManager.default
-    var isDir : ObjCBool = true
-    
-    if options.dst == "" {
-        print("Destination path must be set.")
-        exit(1)
-    } else {
-        if fileManager.fileExists(atPath: options.dst, isDirectory:&isDir) {
-            dstUrl = URL(fileURLWithPath: options.dst)
-        } else {
-            print("Destination path does not exist")
-            exit(1)
-        }
-    }
-    
-    if options.src == "" {
-        do {
-            srcUrl = try FileManager.default.url(for: .documentDirectory,
-                                                 in: .userDomainMask,
-                                                 appropriateFor: nil,
-                                                 create: false)
-        } catch {
-            print(error.localizedDescription)
-            exit(1)
-        }
-    } else {
-        if fileManager.fileExists(atPath: options.src, isDirectory:&isDir) {
-            srcUrl = URL(fileURLWithPath: options.src)
-        } else {
-            print("Source path does not exist")
-            exit(1)
-        }
-    }
-    
-    if let safeDstUrl = dstUrl {
-        if let safeSrcUrl = srcUrl {
-            let dstStats = analyzeDstDir(dstURL: safeDstUrl, srcURL: safeSrcUrl)
-            printDstStats(stats: dstStats, verbose: options.verbose)
-            
-            let srcStats = analyzeSrcDir(srcURL: safeSrcUrl, dstURL: safeDstUrl)
-            printSrcStats(stats: srcStats, verbose: options.verbose)
-            
-            if options.dryRun == true {
-                exit(0)
-            } else {
-                DeleteItems(items: srcStats.filesToDeleteBanlist)
-                DeleteItems(items: dstStats.filesToDeleteBanlist)
-                DeleteItems(items: dstStats.filesToDelete)
-                DeleteItems(items: dstStats.dirsToDelete)
-                
-                CreateDirs(dirs: srcStats.dirsToCreate)
-                CopyFiles(files: srcStats.filesToCopy)
-                OverwriteFiles(files: srcStats.filesToOverwrite)
-                DownloadAndCopyFiles(files: srcStats.filesToDownloadAndCopy)
-            }
-        }
-    }
-}
-
-struct URLPair {
-    var placeholder: URL?
-    var src: URL
-    var dst: URL
+do {
+    try cli.run()
+} catch ArgumentError.DestinationUnset {
+    fputs("Destination path must be set (--dst <path>)", stderr)
+    exit(1)
+} catch ArgumentError.DestinationDoesNotExist {
+    fputs("Destination path does not exist", stderr)
+    exit(1)
+} catch ArgumentError.SourceDoesNotExist {
+    fputs("Source path does not exist", stderr)
+    exit(1)
+} catch {
+    fputs("\(error)\n", stderr)
+    exit(1)
 }

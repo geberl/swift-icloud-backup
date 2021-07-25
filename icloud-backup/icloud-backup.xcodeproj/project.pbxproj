@@ -13,9 +13,9 @@
 		A408075326AAF3E4009FD4F4 /* analyze_dst.swift in Sources */ = {isa = PBXBuildFile; fileRef = A408075226AAF3E4009FD4F4 /* analyze_dst.swift */; };
 		A408075526AAF3FD009FD4F4 /* placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A408075426AAF3FD009FD4F4 /* placeholder.swift */; };
 		A44447B426AC60C6004A4D4D /* backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44447B326AC60C6004A4D4D /* backup.swift */; };
-		A44447B726AC8FDF004A4D4D /* Progress in Frameworks */ = {isa = PBXBuildFile; productRef = A44447B626AC8FDF004A4D4D /* Progress */; };
 		A4A9A89626AAF1F900706A28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A9A89526AAF1F900706A28 /* main.swift */; };
 		A4BCBAA326AD5F3500CE89F6 /* analyze_src.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BCBAA226AD5F3500CE89F6 /* analyze_src.swift */; };
+		A4BCBAA526AD7DBF00CE89F6 /* cli.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BCBAA426AD7DBF00CE89F6 /* cli.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +39,7 @@
 		A4A9A89226AAF1F900706A28 /* icloud-backup */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "icloud-backup"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9A89526AAF1F900706A28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A4BCBAA226AD5F3500CE89F6 /* analyze_src.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = analyze_src.swift; sourceTree = "<group>"; };
+		A4BCBAA426AD7DBF00CE89F6 /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +48,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A408074D26AAF305009FD4F4 /* ArgumentParser in Frameworks */,
-				A44447B726AC8FDF004A4D4D /* Progress in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				A4A9A89526AAF1F900706A28 /* main.swift */,
+				A4BCBAA426AD7DBF00CE89F6 /* cli.swift */,
 				A408075226AAF3E4009FD4F4 /* analyze_dst.swift */,
 				A4BCBAA226AD5F3500CE89F6 /* analyze_src.swift */,
 				A44447B326AC60C6004A4D4D /* backup.swift */,
@@ -102,7 +103,6 @@
 			name = "icloud-backup";
 			packageProductDependencies = (
 				A408074C26AAF305009FD4F4 /* ArgumentParser */,
-				A44447B626AC8FDF004A4D4D /* Progress */,
 			);
 			productName = "icloud-backup";
 			productReference = A4A9A89226AAF1F900706A28 /* icloud-backup */;
@@ -133,7 +133,6 @@
 			mainGroup = A4A9A88926AAF1F800706A28;
 			packageReferences = (
 				A408074B26AAF305009FD4F4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
-				A44447B526AC8FDF004A4D4D /* XCRemoteSwiftPackageReference "Progress" */,
 			);
 			productRefGroup = A4A9A89326AAF1F900706A28 /* Products */;
 			projectDirPath = "";
@@ -152,6 +151,7 @@
 				A408075326AAF3E4009FD4F4 /* analyze_dst.swift in Sources */,
 				A44447B426AC60C6004A4D4D /* backup.swift in Sources */,
 				A408075526AAF3FD009FD4F4 /* placeholder.swift in Sources */,
+				A4BCBAA526AD7DBF00CE89F6 /* cli.swift in Sources */,
 				A408074F26AAF3A8009FD4F4 /* stats.swift in Sources */,
 				A4BCBAA326AD5F3500CE89F6 /* analyze_src.swift in Sources */,
 				A4A9A89626AAF1F900706A28 /* main.swift in Sources */,
@@ -335,14 +335,6 @@
 				minimumVersion = 0.4.3;
 			};
 		};
-		A44447B526AC8FDF004A4D4D /* XCRemoteSwiftPackageReference "Progress" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jkandzi/Progress.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -350,11 +342,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A408074B26AAF305009FD4F4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
-		};
-		A44447B626AC8FDF004A4D4D /* Progress */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A44447B526AC8FDF004A4D4D /* XCRemoteSwiftPackageReference "Progress" */;
-			productName = Progress;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

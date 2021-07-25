@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Progress
 
 func DeleteItems(items: [URL]) {
     for item in items {
@@ -56,7 +55,7 @@ func OverwriteFiles(files: [URLPair]) {
 }
 
 func DownloadAndCopyFiles(files: [URLPair]) {
-    for file in Progress(files) {
+    for file in files {
         do {
             try DownloadFromCloud(placeholder: file.placeholder!, file: file.src)
             try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
@@ -82,6 +81,12 @@ func DownloadFromCloud(placeholder: URL, file: URL) throws {
             }
         }
     } catch {
-        // Very crude
+        // TODO this whole function is very crude, rewrite
+        
+        // I did not manage to subscribe to the correct notifications, never received anything when doing like that:
+        // https://github.com/MixinNetwork/ios-app/blob/e516175e62e245af21d6d15f703fa607f3ed76ad/Mixin/UserInterface/Controllers/Home/RestoreViewController.swift#L110
+        // https://stackoverflow.com/questions/42457929/is-it-icloud-or-is-it-my-code
+        // https://stackoverflow.com/questions/43325561/turning-off-icloud-and-remove-items-from-the-ubiquitous-container/43328488#43328488
+        // https://stackoverflow.com/questions/51843828/how-to-get-data-from-a-file-in-icloud-after-reinstalling-the-app
     }
 }

@@ -84,6 +84,13 @@ func printSrcStats(stats: srcDirStats, verbose: Bool) {
         }
     }
     print("  size (copy)               ", getSizeString(byteCount: stats.filesToCopySize))
+    print("  files to overwrite        ", stats.filesToOverwrite.count)
+    if verbose {
+        for item in stats.filesToOverwrite {
+            print("    ", item.src.path)
+        }
+    }
+    print("  size (overwrite)          ", getSizeString(byteCount: stats.filesToOverwriteSize))
     print("  files to download & copy  ", stats.filesToDownloadAndCopy.count)
     if verbose {
         for item in stats.filesToDownloadAndCopy {

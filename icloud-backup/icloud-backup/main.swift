@@ -83,6 +83,7 @@ if options.version == true {
                 
                 CreateDirs(dirs: srcStats.dirsToCreate)
                 CopyFiles(files: srcStats.filesToCopy)
+                OverwriteFiles(files: srcStats.filesToOverwrite)
                 DownloadAndCopyFiles(files: srcStats.filesToDownloadAndCopy)
             }
         }

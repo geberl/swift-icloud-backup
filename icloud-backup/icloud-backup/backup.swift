@@ -44,6 +44,17 @@ func CopyFiles(files: [URLPair]) {
     }
 }
 
+func OverwriteFiles(files: [URLPair]) {
+    for file in files {
+        do {
+            try FileManager.default.removeItem(at: file.dst)
+            try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+
 func DownloadAndCopyFiles(files: [URLPair]) {
     for file in Progress(files) {
         do {

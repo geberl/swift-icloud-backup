@@ -13,6 +13,15 @@ struct iCloudPlist: Codable {
     var NSURLNameKey: String
 }
 
+func fileIsPlaceholder(url: URL) -> Bool {
+    if let fileType: String = url.typeIdentifier {
+        if fileType == "com.apple.icloud-file-fault" {
+            return true
+        }
+    }
+    return false
+}
+
 func getSizeOfOffloadedContent(url: URL) -> Int64 {
     guard let xml = FileManager.default.contents(atPath: url.path) else {
         print(url)

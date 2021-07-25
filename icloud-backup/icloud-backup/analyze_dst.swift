@@ -78,12 +78,10 @@ func analyzeDstDir(dstURL: URL, srcURL: URL) -> dstDirStats {
                 stats.fileSize += fileSize
                 
                 // Banlist 1/2: File is actually a placeholder
-                if let fileType: String = dstElementURL.typeIdentifier {
-                    if fileType == "com.apple.icloud-file-fault" {
-                        stats.filesToDeleteBanlist.append(dstElementURL)
-                        stats.filesToDeleteBanlistSize += fileSize
-                        continue
-                    }
+                if fileIsPlaceholder(url: dstElementURL) {
+                    stats.filesToDeleteBanlist.append(dstElementURL)
+                    stats.filesToDeleteBanlistSize += fileSize
+                    continue
                 }
                 
                 // Banlist 2/2: File is .DS_Store

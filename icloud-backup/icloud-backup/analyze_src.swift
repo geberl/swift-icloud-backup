@@ -20,6 +20,9 @@ struct srcDirStats {
     var filesToCopy: [URLPair]
     var filesToCopySize: Int64
     
+    var filesToOverwrite: [URLPair]
+    var filesToOverwriteSize: Int64
+    
     var filesToDownloadAndCopy: [URLPair]
     var filesToDownloadAndCopySize: Int64
     
@@ -36,6 +39,8 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                             dirsToCreate: [URL](),
                             filesToCopy: [URLPair](),
                             filesToCopySize: 0,
+                            filesToOverwrite: [URLPair](),
+                            filesToOverwriteSize: 0,
                             filesToDownloadAndCopy: [URLPair](),
                             filesToDownloadAndCopySize: 0,
                             filesToDeleteBanlist: [URL](),
@@ -67,31 +72,29 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
             } else {
                 stats.fileCount += 1
                 var isDir: ObjCBool = false
-
-                if let fileType: String = srcElementURL.typeIdentifier {
-                    if fileType == "com.apple.icloud-file-fault" {
-                        let offladedName = getNameOfOffloadedContent(url: srcElementURL)
-                        
-                        var realSrcElementURL = srcElementURL.deletingLastPathComponent()
-                        realSrcElementURL.appendPathComponent(offladedName)
-                        
-                        var realDstElementURL = dstElementURL.deletingLastPathComponent()
-                        realDstElementURL.appendPathComponent(offladedName)
-                        
-                        if fileManager.fileExists(atPath: realDstElementURL.path, isDirectory:&isDir) {
-                            continue
-                        }
-                        
-                        stats.filesToDownloadAndCopy.append(URLPair(placeholder: srcElementURL,
-                                                                    src: realSrcElementURL,
-                                                                    dst: realDstElementURL))
-                        
-                        let offloadedSize = getSizeOfOffloadedContent(url: srcElementURL)
-                        stats.filesToDownloadAndCopySize += offloadedSize
-                        stats.fileSize += offloadedSize
-                        
+                
+                if fileIsPlaceholder(url: srcElementURL) {
+                    let offladedName = getNameOfOffloadedContent(url: srcElementURL)
+                    
+                    var realSrcElementURL = srcElementURL.deletingLastPathComponent()
+                    realSrcElementURL.appendPathComponent(offladedName)
+                    
+                    var realDstElementURL = dstElementURL.deletingLastPathComponent()
+                    realDstElementURL.appendPathComponent(offladedName)
+                    
+                    if fileManager.fileExists(atPath: realDstElementURL.path, isDirectory:&isDir) {
                         continue
                     }
+                    
+                    stats.filesToDownloadAndCopy.append(URLPair(placeholder: srcElementURL,
+                                                                src: realSrcElementURL,
+                                                                dst: realDstElementURL))
+                    
+                    let offloadedSize = getSizeOfOffloadedContent(url: srcElementURL)
+                    stats.filesToDownloadAndCopySize += offloadedSize
+                    stats.fileSize += offloadedSize
+                    
+                    continue
                 }
 
                 var fileSize: Int64
@@ -111,7 +114,29 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                 }
                 
                 if fileManager.fileExists(atPath: dstElementURL.path, isDirectory:&isDir) {
-                    continue
+                    do {
+                        let srcAttr = try fileManager.attributesOfItem(atPath: srcElementURL.path)
+                        let srcFileSize = srcAttr[FileAttributeKey.size] as! Int64
+                        let srcCreationDate = srcAttr[FileAttributeKey.creationDate] as! Date
+                        let srcModificationDate = srcAttr[FileAttributeKey.modificationDate] as! Date
+                        
+                        let dstAttr = try fileManager.attributesOfItem(atPath: dstElementURL.path)
+                        let dstFileSize = dstAttr[FileAttributeKey.size] as! Int64
+                        let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as! Date
+                        let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as! Date
+                        
+                        if srcFileSize == dstFileSize && srcCreationDate == dstCreationDate && srcModificationDate == dstModificationDate {
+                            continue
+                        } else {
+                            stats.filesToOverwrite.append(URLPair(src: srcElementURL,
+                                                                  dst: dstElementURL))
+                            stats.filesToOverwriteSize += fileSize
+                            continue
+                        }
+                    } catch {
+                        // Something happened when accessing file attributes of either src or dst.
+                        // Did not see this yet. Unclear how to proceed.
+                    }
                 }
                 
                 stats.filesToCopy.append(URLPair(src: srcElementURL,

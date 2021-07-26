@@ -35,75 +35,82 @@ func getSizeString(byteCount: Int64) -> String {
 }
 
 func printDstStats(stats: dstDirStats, verbose: Bool) {
-    print("Results destination dir ------------------------------")
-    print("  start                     ", stats.start)
-    print("  end                       ", stats.end ?? "n/a")
-    print("  directories               ", stats.dirCount)
-    print("  files                     ", stats.fileCount)
-    print("  size                      ", getSizeString(byteCount: stats.fileSize))
-    print("  directories to delete     ", stats.dirsToDelete.count)
+    print("Results destination dir ----------------------------------")
+    print("  start                         ", stats.start)
+    print("  end                           ", stats.end ?? "n/a")
+    print("  directories                   ", stats.dirCount)
+    print("  files                         ", stats.fileCount)
+    print("  size                          ", getSizeString(byteCount: stats.fileSize))
+    print("  directories to delete         ", stats.dirsToDelete.count)
     if verbose {
         for item in stats.dirsToDelete {
             print("    ", item.path)
         }
     }
-    print("  files to delete           ", stats.filesToDelete.count)
+    print("  files to delete               ", stats.filesToDelete.count)
     if verbose {
         for item in stats.filesToDelete {
             print("    ", item.path)
         }
     }
-    print("  size (delete)             ", getSizeString(byteCount: stats.filesToDeleteSize))
-    print("  files to delete (banlist) ", stats.filesToDeleteBanlist.count)
+    print("  size (delete)                 ", getSizeString(byteCount: stats.filesToDeleteSize))
+    print("  files to delete (banlist)     ", stats.filesToDeleteBanlist.count)
     if verbose {
         for item in stats.filesToDeleteBanlist {
             print("    ", item.path)
         }
     }
-    print("  size (banlist)            ", getSizeString(byteCount: stats.filesToDeleteBanlistSize))
+    print("  size (banlist)                ", getSizeString(byteCount: stats.filesToDeleteBanlistSize))
     print("")
 }
 
 func printSrcStats(stats: srcDirStats, verbose: Bool) {
-    print("Results source dir -----------------------------------")
-    print("  start                     ", stats.start)
-    print("  end                       ", stats.end ?? "n/a")
-    print("  directories               ", stats.dirCount)
-    print("  files                     ", stats.fileCount)
-    print("  size                      ", getSizeString(byteCount: stats.fileSize))
-    print("  directories to create     ", stats.dirsToCreate.count)
+    print("Results source dir ---------------------------------------")
+    print("  start                         ", stats.start)
+    print("  end                           ", stats.end ?? "n/a")
+    print("  directories                   ", stats.dirCount)
+    print("  files                         ", stats.fileCount)
+    print("  size                          ", getSizeString(byteCount: stats.fileSize))
+    print("  directories to create         ", stats.dirsToCreate.count)
     if verbose {
         for item in stats.dirsToCreate {
             print("    ", item.path)
         }
     }
-    print("  files to copy             ", stats.filesToCopy.count)
+    print("  files to copy                 ", stats.filesToCopy.count)
     if verbose {
         for item in stats.filesToCopy {
             print("    ", item.src.path)
         }
     }
-    print("  size (copy)               ", getSizeString(byteCount: stats.filesToCopySize))
-    print("  files to overwrite        ", stats.filesToOverwrite.count)
+    print("  size (copy)                   ", getSizeString(byteCount: stats.filesToCopySize))
+    print("  files to overwrite            ", stats.filesToOverwrite.count)
     if verbose {
         for item in stats.filesToOverwrite {
             print("    ", item.src.path)
         }
     }
-    print("  size (overwrite)          ", getSizeString(byteCount: stats.filesToOverwriteSize))
-    print("  files to download & copy  ", stats.filesToDownloadAndCopy.count)
+    print("  size (overwrite)              ", getSizeString(byteCount: stats.filesToOverwriteSize))
+    print("  files to download & copy      ", stats.filesToDownloadAndCopy.count)
     if verbose {
         for item in stats.filesToDownloadAndCopy {
             print("    ", item.src.path)
         }
     }
-    print("  size (download & copy)    ", getSizeString(byteCount: stats.filesToDownloadAndCopySize))
-    print("  files to delete (banlist) ", stats.filesToDeleteBanlist.count)
+    print("  size (download & copy)        ", getSizeString(byteCount: stats.filesToDownloadAndCopySize))
+    print("  files to download & overwrite ", stats.filesToDownloadAndOverwrite.count)
+    if verbose {
+        for item in stats.filesToDownloadAndOverwrite {
+            print("    ", item.src.path)
+        }
+    }
+    print("  size (download & overwrite)   ", getSizeString(byteCount: stats.filesToDownloadAndOverwriteSize))
+    print("  files to delete (banlist)     ", stats.filesToDeleteBanlist.count)
     if verbose {
         for item in stats.filesToDeleteBanlist {
             print("    ", item.path)
         }
     }
-    print("  size (banlist)            ", getSizeString(byteCount: stats.filesToDeleteBanlistSize))
+    print("  size (banlist)                ", getSizeString(byteCount: stats.filesToDeleteBanlistSize))
     print("")
 }

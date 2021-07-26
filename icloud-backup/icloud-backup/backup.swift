@@ -66,6 +66,19 @@ func DownloadAndCopyFiles(files: [URLPair]) {
     }
 }
 
+func DownloadAndOverwriteFiles(files: [URLPair]) {
+    for file in files {
+        do {
+            try DownloadFromCloud(placeholder: file.placeholder!, file: file.src)
+            try FileManager.default.removeItem(at: file.dst)
+            try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
+            try FileManager.default.evictUbiquitousItem(at: file.src)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+
 func DownloadFromCloud(placeholder: URL, file: URL) throws {
     try FileManager.default.startDownloadingUbiquitousItem(at: placeholder)
     do {

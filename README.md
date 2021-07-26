@@ -51,8 +51,6 @@
 
 ## Know Issues
 
-- Bug: Offloaded files are only checked for existence at dst, size/modification time is yet not taken into account
-    - Meaning you can have an offloaded file with a newer version at src, and the file doesn't get copied to dst, because the old version already exists there
 - Limitation: Using a non-APFS formatted drive as destination is not supported
     - Copying works fine, but afterwards the file attributes can't be set correctly for e.g. exFAT (probably because those attributes don't exist there?)
     - HFS+ might work, untested

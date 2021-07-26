@@ -82,6 +82,7 @@ struct CLI {
                     CopyFiles(files: srcStats.filesToCopy)
                     OverwriteFiles(files: srcStats.filesToOverwrite)
                     DownloadAndCopyFiles(files: srcStats.filesToDownloadAndCopy)
+                    DownloadAndOverwriteFiles(files: srcStats.filesToDownloadAndOverwrite)
                 }
             }
         }

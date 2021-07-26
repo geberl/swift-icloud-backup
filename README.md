@@ -4,8 +4,8 @@
 
 ![Swift](https://img.shields.io/badge/swift-5.4-orange.svg)
 ![Xcode](https://img.shields.io/badge/xcode-12.5.1-brightgreen.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Usage
 
@@ -51,8 +51,10 @@
 
 ## Know Issues
 
-- Using a non-APFS formatted drive as destination is not supported
+- Bug: Offloaded files are only checked for existence at dst, size/modification time is yet not taken into account
+    - Meaning you can have an offloaded file with a newer version at src, and the file doesn't get copied to dst, because the old version already exists there
+- Limitation: Using a non-APFS formatted drive as destination is not supported
     - Copying works fine, but afterwards the file attributes can't be set correctly for e.g. exFAT (probably because those attributes don't exist there?)
     - HFS+ might work, untested
-- Progress indication is not yet shown during long running operations
+- Improvement: Progress indication is not yet shown during long running operations
     - Maybe use [https://github.com/jkandzi/Progress.swift](https://github.com/jkandzi/Progress.swift)

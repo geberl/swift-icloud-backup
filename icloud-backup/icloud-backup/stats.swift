@@ -1,10 +1,3 @@
-//
-//  stats.swift
-//  icloud-backup
-//
-//  Created by Günther Eberl on 2021-07-23.
-//
-
 import Foundation
 
 func getSizeString(byteCount: Int64) -> String {

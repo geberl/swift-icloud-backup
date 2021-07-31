@@ -1,10 +1,3 @@
-//
-//  analyze_src.swift
-//  icloud-backup
-//
-//  Created by Günther Eberl on 2021-07-25.
-//
-
 import Foundation
 
 struct srcDirStats {

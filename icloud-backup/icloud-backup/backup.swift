@@ -1,10 +1,3 @@
-//
-//  backup.swift
-//  icloud-backup
-//
-//  Created by Günther Eberl on 2021-07-24.
-//
-
 import Foundation
 
 func DeleteItems(items: [URL]) {

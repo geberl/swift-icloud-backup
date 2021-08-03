@@ -93,8 +93,24 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                             let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as! Date
                             let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as! Date
                             
-                            if offloadedSize == dstFileSize && placeholderCreationDate == dstCreationDate && placeholderModificationDate == dstModificationDate{
-                                continue
+                            let oneSecond: TimeInterval = 1.0
+                            
+                            if offloadedSize == dstFileSize {
+                                var creationDateOffset = placeholderCreationDate - dstCreationDate
+                                if creationDateOffset < 0 {
+                                    creationDateOffset = -1 * creationDateOffset
+                                }
+                                
+                                if creationDateOffset < oneSecond {
+                                    var modificationDateOffset = placeholderModificationDate - dstModificationDate
+                                    if modificationDateOffset < 0 {
+                                        modificationDateOffset = -1 * modificationDateOffset
+                                    }
+                                    
+                                    if modificationDateOffset < oneSecond {
+                                        continue
+                                    }
+                                }
                             } else {
                                 stats.filesToDownloadAndOverwrite.append(URLPair(placeholder: srcElementURL,
                                                                                  src: realSrcElementURL,
@@ -144,8 +160,24 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                         let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as! Date
                         let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as! Date
                         
-                        if srcFileSize == dstFileSize && srcCreationDate == dstCreationDate && srcModificationDate == dstModificationDate {
-                            continue
+                        let oneSecond: TimeInterval = 1.0
+                        
+                        if srcFileSize == dstFileSize {
+                            var creationDateOffset = srcCreationDate - dstCreationDate
+                            if creationDateOffset < 0 {
+                                creationDateOffset = -1 * creationDateOffset
+                            }
+                            
+                            if creationDateOffset < oneSecond {
+                                var modificationDateOffset = srcModificationDate - dstModificationDate
+                                if modificationDateOffset < 0 {
+                                    modificationDateOffset = -1 * modificationDateOffset
+                                }
+                                
+                                if modificationDateOffset < oneSecond {
+                                    continue
+                                }
+                            }
                         } else {
                             stats.filesToOverwrite.append(URLPair(src: srcElementURL,
                                                                   dst: dstElementURL))

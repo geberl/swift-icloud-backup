@@ -39,7 +39,8 @@
 
 ## Dependencies
 
-- [https://github.com/apple/swift-argument-parser](https://github.com/apple/swift-argument-parser)
+- [swift-argument-parser](https://github.com/apple/swift-argument-parser) (flags and options)
+- [chalk](https://github.com/mxcl/Chalk) (colors)
 
 ## Why?
 

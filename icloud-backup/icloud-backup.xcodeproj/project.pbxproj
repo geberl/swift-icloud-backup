@@ -13,6 +13,7 @@
 		A408075326AAF3E4009FD4F4 /* analyze_dst.swift in Sources */ = {isa = PBXBuildFile; fileRef = A408075226AAF3E4009FD4F4 /* analyze_dst.swift */; };
 		A408075526AAF3FD009FD4F4 /* placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A408075426AAF3FD009FD4F4 /* placeholder.swift */; };
 		A44447B426AC60C6004A4D4D /* backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44447B326AC60C6004A4D4D /* backup.swift */; };
+		A490AB7926B9AA2A007C1120 /* Chalk in Frameworks */ = {isa = PBXBuildFile; productRef = A490AB7826B9AA2A007C1120 /* Chalk */; };
 		A4A9A89626AAF1F900706A28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A9A89526AAF1F900706A28 /* main.swift */; };
 		A4BCBAA326AD5F3500CE89F6 /* analyze_src.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BCBAA226AD5F3500CE89F6 /* analyze_src.swift */; };
 		A4BCBAA526AD7DBF00CE89F6 /* cli.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BCBAA426AD7DBF00CE89F6 /* cli.swift */; };
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A490AB7926B9AA2A007C1120 /* Chalk in Frameworks */,
 				A408074D26AAF305009FD4F4 /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -103,6 +105,7 @@
 			name = "icloud-backup";
 			packageProductDependencies = (
 				A408074C26AAF305009FD4F4 /* ArgumentParser */,
+				A490AB7826B9AA2A007C1120 /* Chalk */,
 			);
 			productName = "icloud-backup";
 			productReference = A4A9A89226AAF1F900706A28 /* icloud-backup */;
@@ -133,6 +136,7 @@
 			mainGroup = A4A9A88926AAF1F800706A28;
 			packageReferences = (
 				A408074B26AAF305009FD4F4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				A490AB7726B9AA2A007C1120 /* XCRemoteSwiftPackageReference "Chalk" */,
 			);
 			productRefGroup = A4A9A89326AAF1F900706A28 /* Products */;
 			projectDirPath = "";
@@ -335,6 +339,14 @@
 				minimumVersion = 0.4.3;
 			};
 		};
+		A490AB7726B9AA2A007C1120 /* XCRemoteSwiftPackageReference "Chalk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/Chalk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -342,6 +354,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A408074B26AAF305009FD4F4 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
+		};
+		A490AB7826B9AA2A007C1120 /* Chalk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A490AB7726B9AA2A007C1120 /* XCRemoteSwiftPackageReference "Chalk" */;
+			productName = Chalk;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

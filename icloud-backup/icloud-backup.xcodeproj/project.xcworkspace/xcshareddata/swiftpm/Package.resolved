@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Chalk",
+        "repositoryURL": "https://github.com/mxcl/Chalk",
+        "state": {
+          "branch": null,
+          "revision": "9aa9f348b86db3cf6702a3e43c081ecec80cf3c7",
+          "version": "0.4.0"
+        }
+      },
+      {
         "package": "swift-argument-parser",
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {

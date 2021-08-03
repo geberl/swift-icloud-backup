@@ -37,7 +37,7 @@
 		A408075226AAF3E4009FD4F4 /* analyze_dst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = analyze_dst.swift; sourceTree = "<group>"; };
 		A408075426AAF3FD009FD4F4 /* placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = placeholder.swift; sourceTree = "<group>"; };
 		A44447B326AC60C6004A4D4D /* backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = backup.swift; sourceTree = "<group>"; };
-		A4A9A89226AAF1F900706A28 /* icloud-backup */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "icloud-backup"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A9A89226AAF1F900706A28 /* icloudbackup */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = icloudbackup; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A9A89526AAF1F900706A28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A4BCBAA226AD5F3500CE89F6 /* analyze_src.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = analyze_src.swift; sourceTree = "<group>"; };
 		A4BCBAA426AD7DBF00CE89F6 /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
@@ -67,7 +67,7 @@
 		A4A9A89326AAF1F900706A28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A4A9A89226AAF1F900706A28 /* icloud-backup */,
+				A4A9A89226AAF1F900706A28 /* icloudbackup */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,9 +90,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A4A9A89126AAF1F900706A28 /* icloud-backup */ = {
+		A4A9A89126AAF1F900706A28 /* icloudbackup */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4A9A89926AAF1F900706A28 /* Build configuration list for PBXNativeTarget "icloud-backup" */;
+			buildConfigurationList = A4A9A89926AAF1F900706A28 /* Build configuration list for PBXNativeTarget "icloudbackup" */;
 			buildPhases = (
 				A4A9A88E26AAF1F900706A28 /* Sources */,
 				A4A9A88F26AAF1F900706A28 /* Frameworks */,
@@ -102,13 +102,13 @@
 			);
 			dependencies = (
 			);
-			name = "icloud-backup";
+			name = icloudbackup;
 			packageProductDependencies = (
 				A408074C26AAF305009FD4F4 /* ArgumentParser */,
 				A490AB7826B9AA2A007C1120 /* Chalk */,
 			);
 			productName = "icloud-backup";
-			productReference = A4A9A89226AAF1F900706A28 /* icloud-backup */;
+			productReference = A4A9A89226AAF1F900706A28 /* icloudbackup */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -142,7 +142,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A4A9A89126AAF1F900706A28 /* icloud-backup */,
+				A4A9A89126AAF1F900706A28 /* icloudbackup */,
 			);
 		};
 /* End PBXProject section */
@@ -319,7 +319,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4A9A89926AAF1F900706A28 /* Build configuration list for PBXNativeTarget "icloud-backup" */ = {
+		A4A9A89926AAF1F900706A28 /* Build configuration list for PBXNativeTarget "icloudbackup" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4A9A89A26AAF1F900706A28 /* Debug */,

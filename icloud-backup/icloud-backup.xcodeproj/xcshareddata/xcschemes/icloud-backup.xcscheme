@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-               BuildableName = "icloud-backup"
-               BlueprintName = "icloud-backup"
+               BuildableName = "icloudbackup"
+               BlueprintName = "icloudbackup"
                ReferencedContainer = "container:icloud-backup.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-            BuildableName = "icloud-backup"
-            BlueprintName = "icloud-backup"
+            BuildableName = "icloudbackup"
+            BlueprintName = "icloudbackup"
             ReferencedContainer = "container:icloud-backup.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -88,8 +88,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-            BuildableName = "icloud-backup"
-            BlueprintName = "icloud-backup"
+            BuildableName = "icloudbackup"
+            BlueprintName = "icloudbackup"
             ReferencedContainer = "container:icloud-backup.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -11,7 +11,7 @@ struct IcloudbackupOptions: ParsableArguments {
     // --help is automatically included
 }
 
-let cli = CLI(options: IcloudbackupOptions.parseOrExit(), version: "1.2.0")
+let cli = CLI(options: IcloudbackupOptions.parseOrExit(), version: "1.3.1")
 
 do {
     try cli.run()

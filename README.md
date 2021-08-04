@@ -1,6 +1,6 @@
 # swift-icloud-backup
 
-*A macOS terminal app that copies your iCloud Documents onto a connected storage device*
+*A macOS terminal app that copies your iCloud Documents onto a connected storage device, plus some helper tools*
 
 ![Swift](https://img.shields.io/badge/swift-5.4-orange.svg)
 ![Xcode](https://img.shields.io/badge/xcode-12.5.1-brightgreen.svg)
@@ -8,6 +8,10 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Usage
+
+### icloudbackup
+
+*Copy files from iCloud Documents dir to another destination.*
 
 ```shell
 # Show help
@@ -29,7 +33,39 @@
 ./icloudbackup --src "/Users/guenther/Downloads/" --dst "/Volumes/Black/icloud-documents-backup/"
 ```
 
+### iclouddownload
+
+*Recursively download a directory below the iCloud Documents dir.*
+
+```shell
+# Show help
+./iclouddownload --help
+
+# Download everything below that base directory
+./iclouddownload --base "/Users/guenther/Documents/books"
+
+# Download everything below that base directory, showing individual files
+./iclouddownload --base "/Users/guenther/Documents/books" --verbose
+```
+
+### icloudoffload
+
+*Recursively remove the local copies of a directory below the iCloud Documents dir.*
+
+```shell
+# Show help
+./icloudoffload --help
+
+# Offload everything below that base directory
+./icloudoffload --base "/Users/guenther/Documents/books"
+
+# Offload everything below that base directory, showing individual files
+./icloudoffload --base "/Users/guenther/Documents/books" --verbose
+```
+
 ## Screenshots
+
+TODO: These are old.
 
 ![screenshot1](/screenshots/1.png?raw=true "Screenshot 1")
 
@@ -55,5 +91,9 @@
 - Limitation: Using a non-APFS formatted drive as destination is not supported
     - Copying works fine, but afterwards the file attributes can't be set correctly for e.g. exFAT (probably because those attributes don't exist there?)
     - HFS+ might work, untested
+- Limitation: Colorized output does not work in XCode's console
+    - Colors are apparently not supported
+    - Build and use in a real terminal
 - Improvement: Progress indication is not yet shown during long running operations
-    - Maybe use [https://github.com/jkandzi/Progress.swift](https://github.com/jkandzi/Progress.swift)
+    - Use [https://github.com/jkandzi/Progress.swift](https://github.com/jkandzi/Progress.swift)
+    - Progress will not be shown correctly in XCode's console as well, cursor movements are apparently not supported, no problems in a real terminal

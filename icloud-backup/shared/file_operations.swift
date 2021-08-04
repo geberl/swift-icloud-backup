@@ -1,5 +1,11 @@
 import Foundation
 
+struct URLPair {
+    var placeholder: URL?
+    var src: URL
+    var dst: URL
+}
+
 func DeleteItems(items: [URL]) {
     for item in items {
         if FileManager.default.fileExists(atPath: item.path) {
@@ -49,8 +55,8 @@ func OverwriteFiles(files: [URLPair]) {
 
 func DownloadAndCopyFiles(files: [URLPair]) {
     for file in files {
+        WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src)
         do {
-            try DownloadFromCloud(placeholder: file.placeholder!, file: file.src)
             try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
             try FileManager.default.evictUbiquitousItem(at: file.src)
         } catch {
@@ -61,8 +67,8 @@ func DownloadAndCopyFiles(files: [URLPair]) {
 
 func DownloadAndOverwriteFiles(files: [URLPair]) {
     for file in files {
+        WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src)
         do {
-            try DownloadFromCloud(placeholder: file.placeholder!, file: file.src)
             try FileManager.default.removeItem(at: file.dst)
             try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
             try FileManager.default.evictUbiquitousItem(at: file.src)
@@ -72,9 +78,16 @@ func DownloadAndOverwriteFiles(files: [URLPair]) {
     }
 }
 
-func DownloadFromCloud(placeholder: URL, file: URL) throws {
-    try FileManager.default.startDownloadingUbiquitousItem(at: placeholder)
+func WaitDownloadFromCloud(placeholder: URL, file: URL) {
+    // TODO this whole function is very crude, rewrite
+    // I did not manage to subscribe to the correct notifications, never received anything when doing like that:
+    // https://github.com/MixinNetwork/ios-app/blob/e516175e62e245af21d6d15f703fa607f3ed76ad/Mixin/UserInterface/Controllers/Home/RestoreViewController.swift#L110
+    // https://stackoverflow.com/questions/42457929/is-it-icloud-or-is-it-my-code
+    // https://stackoverflow.com/questions/43325561/turning-off-icloud-and-remove-items-from-the-ubiquitous-container/43328488#43328488
+    // https://stackoverflow.com/questions/51843828/how-to-get-data-from-a-file-in-icloud-after-reinstalling-the-app
+    
     do {
+        try FileManager.default.startDownloadingUbiquitousItem(at: placeholder)
         let attributes = try placeholder.resourceValues(forKeys: [URLResourceKey.ubiquitousItemDownloadingStatusKey])
         if let status: URLUbiquitousItemDownloadingStatus = attributes.allValues[URLResourceKey.ubiquitousItemDownloadingStatusKey] as? URLUbiquitousItemDownloadingStatus {
             if status == URLUbiquitousItemDownloadingStatus.current {
@@ -83,16 +96,26 @@ func DownloadFromCloud(placeholder: URL, file: URL) throws {
                 return
             } else if status == URLUbiquitousItemDownloadingStatus.notDownloaded {
                 sleep(1)
-                try DownloadFromCloud(placeholder: placeholder, file: file)
+                WaitDownloadFromCloud(placeholder: placeholder, file: file)
             }
         }
     } catch {
-        // TODO this whole function is very crude, rewrite
-        
-        // I did not manage to subscribe to the correct notifications, never received anything when doing like that:
-        // https://github.com/MixinNetwork/ios-app/blob/e516175e62e245af21d6d15f703fa607f3ed76ad/Mixin/UserInterface/Controllers/Home/RestoreViewController.swift#L110
-        // https://stackoverflow.com/questions/42457929/is-it-icloud-or-is-it-my-code
-        // https://stackoverflow.com/questions/43325561/turning-off-icloud-and-remove-items-from-the-ubiquitous-container/43328488#43328488
-        // https://stackoverflow.com/questions/51843828/how-to-get-data-from-a-file-in-icloud-after-reinstalling-the-app
+        print(error.localizedDescription)
+    }
+}
+
+func TriggerDownloadFromCloud(placeholder: URL) {
+    do {
+        try FileManager.default.startDownloadingUbiquitousItem(at: placeholder)
+    } catch {
+        print(error.localizedDescription)
+    }
+}
+
+func TriggerOffloadToCloud(file: URL) {
+    do {
+        try FileManager.default.evictUbiquitousItem(at: file)
+    } catch {
+        print(error.localizedDescription)
     }
 }

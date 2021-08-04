@@ -38,3 +38,17 @@ func getNameOfOffloadedContent(url: URL) -> String {
     }
     return ""
 }
+
+func correspondingFileURL(placeholderURL: URL) -> URL {
+    // Input url = placeholder, output url = real file
+    var outURL: URL = placeholderURL.deletingLastPathComponent()
+    outURL.appendPathComponent(getNameOfOffloadedContent(url: placeholderURL))
+    return outURL
+}
+
+func correspondingPlaceholderURL(fileURL: URL) -> URL {
+    // Input url = real file, output = placeholder
+    var outURL: URL = fileURL.deletingLastPathComponent()
+    outURL.appendPathComponent("." + fileURL.lastPathComponent + ".icloud")
+    return outURL
+}

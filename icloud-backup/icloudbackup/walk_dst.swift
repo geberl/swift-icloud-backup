@@ -1,10 +1,6 @@
 import Foundation
 
-struct URLPair {
-    var placeholder: URL?
-    var src: URL
-    var dst: URL
-}
+
 
 struct dstDirStats {
     var start: Date

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-               BuildableName = "icloudbackup"
-               BlueprintName = "icloudbackup"
+               BlueprintIdentifier = "A4317FCF26BA6CAB0012CCA6"
+               BuildableName = "iclouddownload"
+               BlueprintName = "iclouddownload"
                ReferencedContainer = "container:icloud-backup.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,23 +44,15 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-            BuildableName = "icloudbackup"
-            BlueprintName = "icloudbackup"
+            BlueprintIdentifier = "A4317FCF26BA6CAB0012CCA6"
+            BuildableName = "iclouddownload"
+            BlueprintName = "iclouddownload"
             ReferencedContainer = "container:icloud-backup.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--help"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "--version"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--show-src"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
@@ -68,12 +60,8 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--dry-run"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--dst &quot;/Volumes/Black/icloud-documents-backup/&quot;"
-            isEnabled = "YES">
+            argument = "--base &quot;/Users/guenther/Documents/jobs&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
@@ -87,9 +75,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A4A9A89126AAF1F900706A28"
-            BuildableName = "icloudbackup"
-            BlueprintName = "icloudbackup"
+            BlueprintIdentifier = "A4317FCF26BA6CAB0012CCA6"
+            BuildableName = "iclouddownload"
+            BlueprintName = "iclouddownload"
             ReferencedContainer = "container:icloud-backup.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

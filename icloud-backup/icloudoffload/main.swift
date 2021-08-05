@@ -8,7 +8,7 @@ struct IcloudoffloadOptions: ParsableArguments {
     // --help is automatically included
 }
 
-let cli = CLI(options: IcloudoffloadOptions.parseOrExit(), version: "1.4.0")
+let cli = CLI(options: IcloudoffloadOptions.parseOrExit(), version: "1.5.0")
 
 do {
     try cli.run()

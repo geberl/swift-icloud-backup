@@ -22,12 +22,11 @@ struct CLI {
         
         var baseUrl: URL?
         let fileManager = FileManager.default
-        var isDir : ObjCBool = true
         
         if options.base == "" {
             throw ArgumentError.BaseUnset
         } else {
-            if fileManager.fileExists(atPath: options.base, isDirectory: &isDir) {
+            if fileManager.dirExists(atPath: options.base) {
                 baseUrl = URL(fileURLWithPath: options.base)
             } else {
                 throw ArgumentError.BaseDoesNotExist

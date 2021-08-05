@@ -28,6 +28,11 @@ extension URL {
 }
 
 extension FileManager {
+    func dirExists(atPath: String) -> Bool {
+        var isDir: ObjCBool = ObjCBool(true)
+        return fileExists(atPath: atPath, isDirectory: &isDir)
+    }
+    
     func isDirectory(url: URL) -> Bool? {
         var isDir: ObjCBool = ObjCBool(false)
         if fileExists(atPath: url.path, isDirectory: &isDir) {

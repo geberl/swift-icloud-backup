@@ -33,7 +33,6 @@ struct CLI {
         var srcUrl: URL?
         var dstUrl: URL?
         let fileManager = FileManager.default
-        var isDir : ObjCBool = true
         
         if options.dst == "" {
             throw ArgumentError.DestinationUnset
@@ -51,7 +50,7 @@ struct CLI {
                                                  appropriateFor: nil,
                                                  create: false)
         } else {
-            if fileManager.fileExists(atPath: options.src, isDirectory: &isDir) {
+            if fileManager.dirExists(atPath: options.src) {
                 srcUrl = URL(fileURLWithPath: options.src)
             } else {
                 throw ArgumentError.SourceDoesNotExist

@@ -11,7 +11,7 @@
 
 ### icloudbackup
 
-*Copy files from iCloud Documents dir to another destination.*
+*Copy files from your iCloud Documents directory to another destination.*
 
 ```shell
 # Show help
@@ -33,9 +33,27 @@
 ./icloudbackup --src "/Users/guenther/Downloads/" --dst "/Volumes/Black/icloud-documents-backup/"
 ```
 
+### icloudstats
+
+*Show stats about your iCloud Documents directory*
+
+```shell
+# Show help
+./icloudstats --help
+
+# Show auto-detected documents directory
+./icloudstats --show-src
+
+# Scan and show stats
+./icloudstats
+
+# Scan and show stats of another directory
+./icloudstats --src "/Users/guenther/Downloads/"
+```
+
 ### iclouddownload
 
-*Recursively download a directory below the iCloud Documents dir.*
+*Recursively download a directory below the iCloud Documents directory.*
 
 ```shell
 # Show help
@@ -50,7 +68,7 @@
 
 ### icloudoffload
 
-*Recursively remove the local copies of a directory below the iCloud Documents dir.*
+*Recursively remove the local copies of a directory below the iCloud Documents directory.*
 
 ```shell
 # Show help
@@ -73,6 +91,10 @@ TODO: These are old.
 
 ![screenshot3](/screenshots/3.png?raw=true "Screenshot 3")
 
+![screenshot4](/screenshots/4.png?raw=true "Screenshot 4")
+
+![screenshot5](/screenshots/5.png?raw=true "Screenshot 5")
+
 ## Dependencies
 
 - [swift-argument-parser](https://github.com/apple/swift-argument-parser) (flags and options)
@@ -82,9 +104,11 @@ TODO: These are old.
 
 - Offloaded files only exist as a placeholder `*.plist` files on your drive
 - These files only have a few bytes
+- Because of this common filesystem usage tools like **DaisyDisk** are of no use to identify big files or get an overview about your actual storage usage
+    - You need to analyze the content of the `*.plist` placeholder file along with real files
 - Because of this common backup tools like `rsync` are of no use, would just copy the placeholder
-- You need to download, backup and offload the real file
-- This tool does exactly that
+    - You need to download, backup and offload the real file
+- These tools help with those issues
 
 ## Know Issues
 

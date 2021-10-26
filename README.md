@@ -3,7 +3,7 @@
 *A macOS terminal app that copies your iCloud Documents onto a connected storage device, plus some helper tools*
 
 ![Swift](https://img.shields.io/badge/swift-5.5-orange.svg)
-![Xcode](https://img.shields.io/badge/xcode-13.0-brightgreen.svg)
+![Xcode](https://img.shields.io/badge/xcode-13.1-brightgreen.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 

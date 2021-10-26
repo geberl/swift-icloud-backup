@@ -37,6 +37,7 @@ struct CLI {
         if options.dst == "" {
             throw ArgumentError.DestinationUnset
         } else {
+            var isDir: ObjCBool = ObjCBool(true)
             if fileManager.fileExists(atPath: options.dst, isDirectory: &isDir) {
                 dstUrl = URL(fileURLWithPath: options.dst)
             } else {

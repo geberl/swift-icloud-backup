@@ -134,21 +134,21 @@ func walkDir(baseURL: URL) -> dirStats {
     while let element = enumerator.nextObject() as? String {
         var elementURL: URL = URL(fileURLWithPath: stats.path)
         elementURL.appendPathComponent(element)
-        
-        let fileSize: Int64 = fileManager.fileSize(atPath: elementURL.path) ?? 0
-        stats.sizeFiles += fileSize
-        
+
         if fileIsPlaceholder(url: elementURL) {
             stats.numberOfPlaceholders += 1
             stats.sizeOffloaded += getSizeOfOffloadedContent(url: elementURL)
             continue
         }
-        
+
         if let values = try? elementURL.resourceValues(forKeys: [.isDirectoryKey]),
            let isDirectory = values.isDirectory {
             if isDirectory {
                 stats.numberOfDirs += 1
             } else {
+                // Real, locally-present file: only these count toward SIZE
+                // (not directory inodes or placeholder stub files).
+                stats.sizeFiles += fileManager.fileSize(atPath: elementURL.path) ?? 0
                 if element.starts(with: ".") {
                     stats.numberOfHidden += 1
                 } else {

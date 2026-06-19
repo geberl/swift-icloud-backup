@@ -55,6 +55,10 @@ func printTotalStats(overall: dirOverall) {
 }
 
 func getPercentString(bytesDir: Int64, bytesTotal: Int64) -> String {
+    // Avoid 0/0 == NaN (which would render as "nan") when the tree is empty.
+    guard bytesTotal > 0 else {
+        return String(format: "%2.1f", arguments: [Float(0)])
+    }
     let percent = ( Float(bytesDir) / Float(bytesTotal) ) * 100
     return String(format: "%2.1f", arguments: [percent])
 }

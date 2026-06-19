@@ -65,15 +65,17 @@ func analyzeDstDir(dstURL: URL, srcURL: URL) -> dstDirStats {
                 stats.fileCount += 1
                 
                 let fileSize: Int64 = fileManager.fileSize(atPath: dstElementURL.path) ?? 0
-                stats.fileSize += fileSize
-                
-                // Banlist 1/2: File is actually a placeholder
+
+                // Banlist 1/2: File is actually a placeholder. Don't count placeholder
+                // stub sizes toward the reported file total (matches the source side).
                 if fileIsPlaceholder(url: dstElementURL) {
                     stats.filesToDeleteBanlist.append(dstElementURL)
                     stats.filesToDeleteBanlistSize += fileSize
                     continue
                 }
-                
+
+                stats.fileSize += fileSize
+
                 // Banlist 2/2: File is .DS_Store
                 if dstElementURL.lastPathComponent == ".DS_Store" {
                     stats.filesToDeleteBanlist.append(dstElementURL)

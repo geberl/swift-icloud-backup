@@ -29,8 +29,8 @@ extension URL {
 
 extension FileManager {
     func dirExists(atPath: String) -> Bool {
-        var isDir: ObjCBool = ObjCBool(true)
-        return fileExists(atPath: atPath, isDirectory: &isDir)
+        var isDir: ObjCBool = ObjCBool(false)
+        return fileExists(atPath: atPath, isDirectory: &isDir) && isDir.boolValue
     }
     
     func isDirectory(url: URL) -> Bool? {

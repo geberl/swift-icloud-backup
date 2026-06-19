@@ -96,30 +96,23 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                                let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as? Date,
                                let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as? Date {
                                 let oneSecond: TimeInterval = 1.0
+                                let creationDateOffset = abs(placeholderCreationDate - dstCreationDate)
+                                let modificationDateOffset = abs(placeholderModificationDate - dstModificationDate)
 
-                                if offloadedSize == dstFileSize {
-                                    var creationDateOffset = placeholderCreationDate - dstCreationDate
-                                    if creationDateOffset < 0 {
-                                        creationDateOffset = -1 * creationDateOffset
-                                    }
-
-                                    if creationDateOffset < oneSecond {
-                                        var modificationDateOffset = placeholderModificationDate - dstModificationDate
-                                        if modificationDateOffset < 0 {
-                                            modificationDateOffset = -1 * modificationDateOffset
-                                        }
-
-                                        if modificationDateOffset < oneSecond {
-                                            continue
-                                        }
-                                    }
-                                } else {
-                                    stats.filesToDownloadAndOverwrite.append(URLPair(placeholder: srcElementURL,
-                                                                                     src: realSrcElementURL,
-                                                                                     dst: realDstElementURL))
-                                    stats.filesToDownloadAndOverwriteSize += offloadedSize
+                                if offloadedSize == dstFileSize
+                                    && creationDateOffset < oneSecond
+                                    && modificationDateOffset < oneSecond {
+                                    // Backup already matches the offloaded file, nothing to do.
                                     continue
                                 }
+
+                                // Exists at dst but differs in size and/or timestamps: download and
+                                // overwrite, since copying onto an existing file would fail.
+                                stats.filesToDownloadAndOverwrite.append(URLPair(placeholder: srcElementURL,
+                                                                                 src: realSrcElementURL,
+                                                                                 dst: realDstElementURL))
+                                stats.filesToDownloadAndOverwriteSize += offloadedSize
+                                continue
                             }
                         } catch {
                             // Something happened when accessing file attributes of either src or dst.
@@ -159,29 +152,22 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                            let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as? Date,
                            let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as? Date {
                             let oneSecond: TimeInterval = 1.0
+                            let creationDateOffset = abs(srcCreationDate - dstCreationDate)
+                            let modificationDateOffset = abs(srcModificationDate - dstModificationDate)
 
-                            if srcFileSize == dstFileSize {
-                                var creationDateOffset = srcCreationDate - dstCreationDate
-                                if creationDateOffset < 0 {
-                                    creationDateOffset = -1 * creationDateOffset
-                                }
-
-                                if creationDateOffset < oneSecond {
-                                    var modificationDateOffset = srcModificationDate - dstModificationDate
-                                    if modificationDateOffset < 0 {
-                                        modificationDateOffset = -1 * modificationDateOffset
-                                    }
-
-                                    if modificationDateOffset < oneSecond {
-                                        continue
-                                    }
-                                }
-                            } else {
-                                stats.filesToOverwrite.append(URLPair(src: srcElementURL,
-                                                                      dst: dstElementURL))
-                                stats.filesToOverwriteSize += fileSize
+                            if srcFileSize == dstFileSize
+                                && creationDateOffset < oneSecond
+                                && modificationDateOffset < oneSecond {
+                                // Identical at src and dst, nothing to do.
                                 continue
                             }
+
+                            // Exists at dst but differs in size and/or timestamps: overwrite in
+                            // place, since copying onto an existing file would fail.
+                            stats.filesToOverwrite.append(URLPair(src: srcElementURL,
+                                                                  dst: dstElementURL))
+                            stats.filesToOverwriteSize += fileSize
+                            continue
                         }
                     } catch {
                         // Something happened when accessing file attributes of either src or dst.

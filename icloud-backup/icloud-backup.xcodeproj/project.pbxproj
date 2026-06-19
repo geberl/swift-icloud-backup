@@ -94,7 +94,6 @@
 		A4317FD826BA6D4A0012CCA6 /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
 		A4317FDA26BA6EDE0012CCA6 /* walk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = walk.swift; sourceTree = "<group>"; };
 		A44447B326AC60C6004A4D4D /* file_operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = file_operations.swift; sourceTree = "<group>"; };
-		FF4447B326AC60C6004A4D01 /* formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = formatting.swift; sourceTree = "<group>"; };
 		A46598B626BC48300032651E /* icloudstats */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = icloudstats; sourceTree = BUILT_PRODUCTS_DIR; };
 		A46598B826BC48300032651E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A46598BD26BC48470032651E /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
@@ -108,6 +107,7 @@
 		A4D287C126BAE77A00EE9157 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A4D287C626BAE7A700EE9157 /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
 		A4D287C826BAE7B100EE9157 /* walk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = walk.swift; sourceTree = "<group>"; };
+		FF4447B326AC60C6004A4D01 /* formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = formatting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -324,7 +324,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					A4317FCF26BA6CAB0012CCA6 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -480,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -545,6 +546,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

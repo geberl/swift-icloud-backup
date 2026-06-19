@@ -41,6 +41,13 @@ extension FileManager {
             return nil
         }
     }
+
+    // File size in bytes, or nil if the attribute is missing or unreadable.
+    // Reads the value as NSNumber so it never traps on a missing/mismatched attribute.
+    func fileSize(atPath path: String) -> Int64? {
+        guard let attr = try? attributesOfItem(atPath: path) else { return nil }
+        return (attr[.size] as? NSNumber)?.int64Value
+    }
 }
 
 extension Date {

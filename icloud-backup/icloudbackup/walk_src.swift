@@ -59,8 +59,9 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
         var dstElementURL: URL = URL(fileURLWithPath: dstURL.path)
         dstElementURL.appendPathComponent(element)
         
-        if let values = try? srcElementURL.resourceValues(forKeys: [.isDirectoryKey]) {
-            if values.isDirectory! {
+        if let values = try? srcElementURL.resourceValues(forKeys: [.isDirectoryKey]),
+           let isDirectory = values.isDirectory {
+            if isDirectory {
                 stats.dirCount += 1
                 
                 var isDir: ObjCBool = true
@@ -85,38 +86,40 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                     if fileManager.fileExists(atPath: realDstElementURL.path, isDirectory:&isDir) {
                         do {
                             let placeholderAttr = try fileManager.attributesOfItem(atPath: srcElementURL.path)
-                            let placeholderCreationDate = placeholderAttr[FileAttributeKey.creationDate] as! Date
-                            let placeholderModificationDate = placeholderAttr[FileAttributeKey.modificationDate] as! Date
-                            
                             let dstAttr = try fileManager.attributesOfItem(atPath: realDstElementURL.path)
-                            let dstFileSize = dstAttr[FileAttributeKey.size] as! Int64
-                            let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as! Date
-                            let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as! Date
-                            
-                            let oneSecond: TimeInterval = 1.0
-                            
-                            if offloadedSize == dstFileSize {
-                                var creationDateOffset = placeholderCreationDate - dstCreationDate
-                                if creationDateOffset < 0 {
-                                    creationDateOffset = -1 * creationDateOffset
-                                }
-                                
-                                if creationDateOffset < oneSecond {
-                                    var modificationDateOffset = placeholderModificationDate - dstModificationDate
-                                    if modificationDateOffset < 0 {
-                                        modificationDateOffset = -1 * modificationDateOffset
+
+                            // Read attributes as optionals so a missing date/size never traps.
+                            // If any can't be read we fall through to download & copy below.
+                            if let placeholderCreationDate = placeholderAttr[FileAttributeKey.creationDate] as? Date,
+                               let placeholderModificationDate = placeholderAttr[FileAttributeKey.modificationDate] as? Date,
+                               let dstFileSize = (dstAttr[FileAttributeKey.size] as? NSNumber)?.int64Value,
+                               let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as? Date,
+                               let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as? Date {
+                                let oneSecond: TimeInterval = 1.0
+
+                                if offloadedSize == dstFileSize {
+                                    var creationDateOffset = placeholderCreationDate - dstCreationDate
+                                    if creationDateOffset < 0 {
+                                        creationDateOffset = -1 * creationDateOffset
                                     }
-                                    
-                                    if modificationDateOffset < oneSecond {
-                                        continue
+
+                                    if creationDateOffset < oneSecond {
+                                        var modificationDateOffset = placeholderModificationDate - dstModificationDate
+                                        if modificationDateOffset < 0 {
+                                            modificationDateOffset = -1 * modificationDateOffset
+                                        }
+
+                                        if modificationDateOffset < oneSecond {
+                                            continue
+                                        }
                                     }
+                                } else {
+                                    stats.filesToDownloadAndOverwrite.append(URLPair(placeholder: srcElementURL,
+                                                                                     src: realSrcElementURL,
+                                                                                     dst: realDstElementURL))
+                                    stats.filesToDownloadAndOverwriteSize += offloadedSize
+                                    continue
                                 }
-                            } else {
-                                stats.filesToDownloadAndOverwrite.append(URLPair(placeholder: srcElementURL,
-                                                                                 src: realSrcElementURL,
-                                                                                 dst: realDstElementURL))
-                                stats.filesToDownloadAndOverwriteSize += offloadedSize
-                                continue
                             }
                         } catch {
                             // Something happened when accessing file attributes of either src or dst.
@@ -132,13 +135,7 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                     continue
                 }
 
-                var fileSize: Int64
-                do {
-                    let attr = try fileManager.attributesOfItem(atPath: srcElementURL.path)
-                    fileSize = attr[FileAttributeKey.size] as! Int64
-                } catch {
-                    fileSize = 0
-                }
+                let fileSize: Int64 = fileManager.fileSize(atPath: srcElementURL.path) ?? 0
                 stats.fileSize += fileSize
                 
                 // Banlist 1/1: File is .DS_Store
@@ -151,38 +148,40 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                 if fileManager.fileExists(atPath: dstElementURL.path, isDirectory:&isDir) {
                     do {
                         let srcAttr = try fileManager.attributesOfItem(atPath: srcElementURL.path)
-                        let srcFileSize = srcAttr[FileAttributeKey.size] as! Int64
-                        let srcCreationDate = srcAttr[FileAttributeKey.creationDate] as! Date
-                        let srcModificationDate = srcAttr[FileAttributeKey.modificationDate] as! Date
-                        
                         let dstAttr = try fileManager.attributesOfItem(atPath: dstElementURL.path)
-                        let dstFileSize = dstAttr[FileAttributeKey.size] as! Int64
-                        let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as! Date
-                        let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as! Date
-                        
-                        let oneSecond: TimeInterval = 1.0
-                        
-                        if srcFileSize == dstFileSize {
-                            var creationDateOffset = srcCreationDate - dstCreationDate
-                            if creationDateOffset < 0 {
-                                creationDateOffset = -1 * creationDateOffset
-                            }
-                            
-                            if creationDateOffset < oneSecond {
-                                var modificationDateOffset = srcModificationDate - dstModificationDate
-                                if modificationDateOffset < 0 {
-                                    modificationDateOffset = -1 * modificationDateOffset
+
+                        // Read attributes as optionals so a missing date/size never traps.
+                        // If any can't be read we fall through to copy below.
+                        if let srcFileSize = (srcAttr[FileAttributeKey.size] as? NSNumber)?.int64Value,
+                           let srcCreationDate = srcAttr[FileAttributeKey.creationDate] as? Date,
+                           let srcModificationDate = srcAttr[FileAttributeKey.modificationDate] as? Date,
+                           let dstFileSize = (dstAttr[FileAttributeKey.size] as? NSNumber)?.int64Value,
+                           let dstCreationDate = dstAttr[FileAttributeKey.creationDate] as? Date,
+                           let dstModificationDate = dstAttr[FileAttributeKey.modificationDate] as? Date {
+                            let oneSecond: TimeInterval = 1.0
+
+                            if srcFileSize == dstFileSize {
+                                var creationDateOffset = srcCreationDate - dstCreationDate
+                                if creationDateOffset < 0 {
+                                    creationDateOffset = -1 * creationDateOffset
                                 }
-                                
-                                if modificationDateOffset < oneSecond {
-                                    continue
+
+                                if creationDateOffset < oneSecond {
+                                    var modificationDateOffset = srcModificationDate - dstModificationDate
+                                    if modificationDateOffset < 0 {
+                                        modificationDateOffset = -1 * modificationDateOffset
+                                    }
+
+                                    if modificationDateOffset < oneSecond {
+                                        continue
+                                    }
                                 }
+                            } else {
+                                stats.filesToOverwrite.append(URLPair(src: srcElementURL,
+                                                                      dst: dstElementURL))
+                                stats.filesToOverwriteSize += fileSize
+                                continue
                             }
-                        } else {
-                            stats.filesToOverwrite.append(URLPair(src: srcElementURL,
-                                                                  dst: dstElementURL))
-                            stats.filesToOverwriteSize += fileSize
-                            continue
                         }
                     } catch {
                         // Something happened when accessing file attributes of either src or dst.

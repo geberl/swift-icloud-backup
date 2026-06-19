@@ -135,13 +135,7 @@ func walkDir(baseURL: URL) -> dirStats {
         var elementURL: URL = URL(fileURLWithPath: stats.path)
         elementURL.appendPathComponent(element)
         
-        var fileSize: Int64
-        do {
-            let attr = try fileManager.attributesOfItem(atPath: elementURL.path)
-            fileSize = attr[FileAttributeKey.size] as! Int64
-        } catch {
-            fileSize = 0
-        }
+        let fileSize: Int64 = fileManager.fileSize(atPath: elementURL.path) ?? 0
         stats.sizeFiles += fileSize
         
         if fileIsPlaceholder(url: elementURL) {
@@ -150,8 +144,9 @@ func walkDir(baseURL: URL) -> dirStats {
             continue
         }
         
-        if let values = try? elementURL.resourceValues(forKeys: [.isDirectoryKey]) {
-            if values.isDirectory! {
+        if let values = try? elementURL.resourceValues(forKeys: [.isDirectoryKey]),
+           let isDirectory = values.isDirectory {
+            if isDirectory {
                 stats.numberOfDirs += 1
             } else {
                 if element.starts(with: ".") {

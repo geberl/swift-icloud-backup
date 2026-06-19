@@ -52,8 +52,9 @@ func analyzeDstDir(dstURL: URL, srcURL: URL) -> dstDirStats {
         srcElementPlaceholderURL.deleteLastPathComponent()
         srcElementPlaceholderURL.appendPathComponent("." + dstElementURL.lastPathComponent + ".icloud")
 
-        if let values = try? dstElementURL.resourceValues(forKeys: [.isDirectoryKey]) {
-            if values.isDirectory! {
+        if let values = try? dstElementURL.resourceValues(forKeys: [.isDirectoryKey]),
+           let isDirectory = values.isDirectory {
+            if isDirectory {
                 stats.dirCount += 1
                 
                 var isDir: ObjCBool = true
@@ -63,13 +64,7 @@ func analyzeDstDir(dstURL: URL, srcURL: URL) -> dstDirStats {
             } else {
                 stats.fileCount += 1
                 
-                var fileSize: Int64
-                do {
-                    let attr = try fileManager.attributesOfItem(atPath: dstElementURL.path)
-                    fileSize = attr[FileAttributeKey.size] as! Int64
-                } catch {
-                    fileSize = 0
-                }
+                let fileSize: Int64 = fileManager.fileSize(atPath: dstElementURL.path) ?? 0
                 stats.fileSize += fileSize
                 
                 // Banlist 1/2: File is actually a placeholder

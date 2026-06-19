@@ -12,8 +12,9 @@ func OffloadItems(baseURL: URL, verbose: Bool) {
         var elementURL: URL = URL(fileURLWithPath: baseURL.path)
         elementURL.appendPathComponent(element)
         
-        if let values = try? elementURL.resourceValues(forKeys: [.isDirectoryKey]) {
-            if values.isDirectory! {
+        if let values = try? elementURL.resourceValues(forKeys: [.isDirectoryKey]),
+           let isDirectory = values.isDirectory {
+            if isDirectory {
                 // Element is a directory, they always exist locally, can't be offloaded, nothing to do
                 continue
             } else {

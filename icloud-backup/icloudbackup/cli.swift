@@ -27,7 +27,7 @@ struct CLI {
                                                            in: .userDomainMask,
                                                            appropriateFor: nil,
                                                            create: false)
-            print(documentsUrl.path.deletingPrefix("file://"))
+            print(documentsUrl.path)
             return
         }
         

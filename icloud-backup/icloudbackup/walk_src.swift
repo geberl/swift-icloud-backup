@@ -74,7 +74,15 @@ func analyzeSrcDir(srcURL: URL, dstURL: URL) -> srcDirStats {
                 
                 if fileIsPlaceholder(url: srcElementURL) {
                     let offladedName = getNameOfOffloadedContent(url: srcElementURL)
-                    
+
+                    // If the real name can't be read from the placeholder plist, the URLs
+                    // below would collapse to the parent directory (appendPathComponent("")
+                    // is a no-op). Skip the file instead of queueing a directory for copy.
+                    if offladedName.isEmpty {
+                        print("Skipping (could not read offloaded name): \(srcElementURL.path)")
+                        continue
+                    }
+
                     var realSrcElementURL = srcElementURL.deletingLastPathComponent()
                     realSrcElementURL.appendPathComponent(offladedName)
                     

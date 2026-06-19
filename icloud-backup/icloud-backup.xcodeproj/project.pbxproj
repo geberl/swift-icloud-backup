@@ -39,6 +39,10 @@
 		A4D287CB26BAE87C00EE9157 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A408075026AAF3BE009FD4F4 /* extensions.swift */; };
 		A4D287CC26BAE87E00EE9157 /* file_operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44447B326AC60C6004A4D4D /* file_operations.swift */; };
 		A4D287CE26BAE8AA00EE9157 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = A4D287CD26BAE8AA00EE9157 /* ArgumentParser */; };
+		FF4447B326AC60C6004A4D02 /* formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4447B326AC60C6004A4D01 /* formatting.swift */; };
+		FF4447B326AC60C6004A4D03 /* formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4447B326AC60C6004A4D01 /* formatting.swift */; };
+		FF4447B326AC60C6004A4D04 /* formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4447B326AC60C6004A4D01 /* formatting.swift */; };
+		FF4447B326AC60C6004A4D05 /* formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4447B326AC60C6004A4D01 /* formatting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -90,6 +94,7 @@
 		A4317FD826BA6D4A0012CCA6 /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
 		A4317FDA26BA6EDE0012CCA6 /* walk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = walk.swift; sourceTree = "<group>"; };
 		A44447B326AC60C6004A4D4D /* file_operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = file_operations.swift; sourceTree = "<group>"; };
+		FF4447B326AC60C6004A4D01 /* formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = formatting.swift; sourceTree = "<group>"; };
 		A46598B626BC48300032651E /* icloudstats */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = icloudstats; sourceTree = BUILT_PRODUCTS_DIR; };
 		A46598B826BC48300032651E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A46598BD26BC48470032651E /* cli.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cli.swift; sourceTree = "<group>"; };
@@ -165,6 +170,7 @@
 				A408075426AAF3FD009FD4F4 /* placeholder.swift */,
 				A408075026AAF3BE009FD4F4 /* extensions.swift */,
 				A44447B326AC60C6004A4D4D /* file_operations.swift */,
+				FF4447B326AC60C6004A4D01 /* formatting.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -368,6 +374,7 @@
 				A4317FD926BA6D4A0012CCA6 /* cli.swift in Sources */,
 				A4317FD326BA6CAB0012CCA6 /* main.swift in Sources */,
 				A4317FE226BA718E0012CCA6 /* file_operations.swift in Sources */,
+				FF4447B326AC60C6004A4D04 /* formatting.swift in Sources */,
 				A4317FDB26BA6EDE0012CCA6 /* walk.swift in Sources */,
 				A4317FE026BA71540012CCA6 /* placeholder.swift in Sources */,
 			);
@@ -384,6 +391,7 @@
 				A46598B926BC48300032651E /* main.swift in Sources */,
 				A46598C026BC48500032651E /* extensions.swift in Sources */,
 				A46598C126BC48520032651E /* file_operations.swift in Sources */,
+				FF4447B326AC60C6004A4D03 /* formatting.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +401,7 @@
 			files = (
 				A408075326AAF3E4009FD4F4 /* walk_dst.swift in Sources */,
 				A44447B426AC60C6004A4D4D /* file_operations.swift in Sources */,
+				FF4447B326AC60C6004A4D02 /* formatting.swift in Sources */,
 				A408075526AAF3FD009FD4F4 /* placeholder.swift in Sources */,
 				A4BCBAA526AD7DBF00CE89F6 /* cli.swift in Sources */,
 				A408074F26AAF3A8009FD4F4 /* stats.swift in Sources */,
@@ -410,6 +419,7 @@
 				A4D287C926BAE7B100EE9157 /* walk.swift in Sources */,
 				A4D287C726BAE7A700EE9157 /* cli.swift in Sources */,
 				A4D287CC26BAE87E00EE9157 /* file_operations.swift in Sources */,
+				FF4447B326AC60C6004A4D05 /* formatting.swift in Sources */,
 				A4D287C226BAE77A00EE9157 /* main.swift in Sources */,
 				A4D287CA26BAE87A00EE9157 /* placeholder.swift in Sources */,
 			);

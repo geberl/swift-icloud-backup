@@ -1,33 +1,6 @@
 import Foundation
 import Chalk
 
-func getSizeString(byteCount: Int64) -> String {
-    let unit: String = "all"
-    
-    if byteCount == 0 {
-        if unit == "all" {
-            return "0 bytes"
-        }
-        return "0 " + unit
-    }
-    
-    let byteCountFormatter = ByteCountFormatter()
-    if unit == "bytes" {
-        byteCountFormatter.allowedUnits = .useBytes
-    } else if unit == "KB" {
-        byteCountFormatter.allowedUnits = .useKB
-    } else if unit == "MB" {
-        byteCountFormatter.allowedUnits = .useMB
-    } else if unit == "GB" {
-        byteCountFormatter.allowedUnits = .useGB
-    } else {
-        byteCountFormatter.allowedUnits = .useAll
-    }
-    byteCountFormatter.countStyle = .file
-    
-    return byteCountFormatter.string(fromByteCount: byteCount)
-}
-
 func getDurationAndTimes(from: Date, to: Date?) -> String{
     let durationFormatter = DateComponentsFormatter()
     durationFormatter.unitsStyle = .abbreviated

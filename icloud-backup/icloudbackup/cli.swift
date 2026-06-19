@@ -4,6 +4,7 @@ enum ArgumentError: Error {
     case DestinationUnset
     case DestinationDoesNotExist
     case SourceDoesNotExist
+    case SourceEmpty
 }
 
 struct CLI {
@@ -65,8 +66,18 @@ struct CLI {
                 
                 let srcStats = analyzeSrcDir(srcURL: safeSrcUrl, dstURL: safeDstUrl)
                 printSrcStats(stats: srcStats, verbose: options.verbose)
-                
+
                 if !options.dryRun {
+                    // Safety guard: a temporarily unavailable (or genuinely empty) source makes every
+                    // destination item look orphaned, so the deletion phase below would wipe the whole
+                    // backup. Refuse when the source has no files and no directories but the destination
+                    // does have content. The user can override with --force.
+                    let sourceIsEmpty = srcStats.fileCount == 0 && srcStats.dirCount == 0
+                    let destinationHasContent = dstStats.fileCount > 0 || dstStats.dirCount > 0
+                    if sourceIsEmpty && destinationHasContent && !options.force {
+                        throw ArgumentError.SourceEmpty
+                    }
+
                     DeleteItems(items: srcStats.filesToDeleteBanlist)
                     DeleteItems(items: dstStats.filesToDeleteBanlist)
                     DeleteItems(items: dstStats.filesToDelete)

@@ -6,6 +6,7 @@ struct IcloudbackupOptions: ParsableArguments {
     @Flag(name: .long, help: "Show auto-detected source path and exit.") var showSrc = false
     @Flag(name: .long, help: "Analyze source and destination trees and print what would happen.") var dryRun = false
     @Flag(name: .long, help: "Show the paths of all individual items after analyzing source and destination.") var verbose = false
+    @Flag(name: .long, help: "Proceed with deletions even when the source appears empty (e.g. iCloud temporarily unavailable). Use with care.") var force = false
     @Option(help: ArgumentHelp("Override the source path.", valueName: "path")) var src = ""
     @Option(help: ArgumentHelp("Set the destination path.", valueName: "path")) var dst = ""
     // --help is automatically included
@@ -23,6 +24,11 @@ do {
     exit(1)
 } catch ArgumentError.SourceDoesNotExist {
     fputs("Source path does not exist", stderr)
+    exit(1)
+} catch ArgumentError.SourceEmpty {
+    fputs("Source contains no files or directories — refusing to delete anything at the destination, "
+          + "since this is how a temporarily unavailable iCloud directory looks and would wipe the backup. "
+          + "If the empty source is intentional, re-run with --force.\n", stderr)
     exit(1)
 } catch {
     fputs("\(error)\n", stderr)

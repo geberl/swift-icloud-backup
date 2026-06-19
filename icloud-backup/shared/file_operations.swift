@@ -55,7 +55,10 @@ func OverwriteFiles(files: [URLPair]) {
 
 func DownloadAndCopyFiles(files: [URLPair]) {
     for file in files {
-        WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src)
+        guard WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src) else {
+            print("Skipping (download failed): \(file.src.path)")
+            continue
+        }
         do {
             try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
             try FileManager.default.evictUbiquitousItem(at: file.src)
@@ -67,7 +70,10 @@ func DownloadAndCopyFiles(files: [URLPair]) {
 
 func DownloadAndOverwriteFiles(files: [URLPair]) {
     for file in files {
-        WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src)
+        guard WaitDownloadFromCloud(placeholder: file.placeholder!, file: file.src) else {
+            print("Skipping (download failed): \(file.src.path)")
+            continue
+        }
         do {
             try FileManager.default.removeItem(at: file.dst)
             try FileManager.default.copyItem(atPath: file.src.path, toPath: file.dst.path)
@@ -78,30 +84,55 @@ func DownloadAndOverwriteFiles(files: [URLPair]) {
     }
 }
 
-func WaitDownloadFromCloud(placeholder: URL, file: URL) {
-    // TODO this whole function is very crude, rewrite
-    // I did not manage to subscribe to the correct notifications, never received anything when doing like that:
-    // https://github.com/MixinNetwork/ios-app/blob/e516175e62e245af21d6d15f703fa607f3ed76ad/Mixin/UserInterface/Controllers/Home/RestoreViewController.swift#L110
-    // https://stackoverflow.com/questions/42457929/is-it-icloud-or-is-it-my-code
-    // https://stackoverflow.com/questions/43325561/turning-off-icloud-and-remove-items-from-the-ubiquitous-container/43328488#43328488
-    // https://stackoverflow.com/questions/51843828/how-to-get-data-from-a-file-in-icloud-after-reinstalling-the-app
-    
+// Kicks off the download of an offloaded item and blocks until it is local.
+// Returns true once the file is downloaded, false if the download errors out or
+// makes no progress within `timeout` seconds. Polls instead of recursing so the
+// wait is bounded and the stack can't grow with the download duration.
+//
+// Note on the notification-free polling approach: subscribing to the relevant
+// iCloud notifications never delivered anything in practice, so we poll the
+// item's downloading status. See:
+// https://stackoverflow.com/questions/42457929/is-it-icloud-or-is-it-my-code
+// https://stackoverflow.com/questions/43325561/turning-off-icloud-and-remove-items-from-the-ubiquitous-container/43328488#43328488
+@discardableResult
+func WaitDownloadFromCloud(placeholder: URL, file: URL, timeout: TimeInterval = 3600) -> Bool {
+    let fileManager = FileManager.default
+
     do {
-        try FileManager.default.startDownloadingUbiquitousItem(at: placeholder)
-        let attributes = try placeholder.resourceValues(forKeys: [URLResourceKey.ubiquitousItemDownloadingStatusKey])
-        if let status: URLUbiquitousItemDownloadingStatus = attributes.allValues[URLResourceKey.ubiquitousItemDownloadingStatusKey] as? URLUbiquitousItemDownloadingStatus {
-            if status == URLUbiquitousItemDownloadingStatus.current {
-                return
-            } else if status == URLUbiquitousItemDownloadingStatus.downloaded {
-                return
-            } else if status == URLUbiquitousItemDownloadingStatus.notDownloaded {
-                sleep(1)
-                WaitDownloadFromCloud(placeholder: placeholder, file: file)
-            }
-        }
+        try fileManager.startDownloadingUbiquitousItem(at: placeholder)
     } catch {
         print(error.localizedDescription)
+        return false
     }
+
+    let start = Date()
+    while Date() - start < timeout {
+        if let status = downloadingStatus(of: placeholder) {
+            if status == .current || status == .downloaded {
+                return true
+            }
+            // status == .notDownloaded: keep waiting.
+        } else if fileManager.fileExists(atPath: file.path) {
+            // The status is no longer readable on the placeholder path because the
+            // finished download replaced it with the real file. Treat as success.
+            return true
+        }
+        sleep(1)
+    }
+
+    print("Timed out after \(Int(timeout))s waiting for iCloud download: \(file.path)")
+    return false
+}
+
+// Reads the iCloud downloading status from a freshly built URL so the value is
+// never served from URL's resource-value cache. Returns nil when the status
+// can't be read (e.g. the placeholder no longer exists).
+private func downloadingStatus(of placeholder: URL) -> URLUbiquitousItemDownloadingStatus? {
+    let freshURL = URL(fileURLWithPath: placeholder.path)
+    guard let values = try? freshURL.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]) else {
+        return nil
+    }
+    return values.ubiquitousItemDownloadingStatus
 }
 
 func TriggerDownloadFromCloud(placeholder: URL) {
